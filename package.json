@@ -1,16 +1,12 @@
 {
-	"activationEvents": [
-		"onDebugResolve:legacy-node",
-		"onCommand:extension.pickNodeProcess",
-		"onCommand:extension.node-debug.toggleSkippingFile",
-		"onCommand:extension.node-debug.attachNodeProcess",
-		"onCommand:extension.node-debug.startAutoAttach"
-	],
-	"capabilities": {
-		"untrustedWorkspaces": {
-			"supported": true
-		},
-		"virtualWorkspaces": false
+	"name": "node-debug",
+	"displayName": "[Deprecated] Node Debug (legacy)",
+	"description": "%extension.description%",
+	"main": "./dist/extension.js",
+	"scripts": {
+		"build": "gulp build",
+		"publish": "gulp prepare-for-webpack && webpack --mode production --vscode-nls && vsce publish",
+		"translations-export": "gulp translations-export"
 	},
 	"contributes": {
 		"breakpoints": [
@@ -419,33 +415,37 @@
 			]
 		}
 	},
+	"activationEvents": [
+		"onDebugResolve:legacy-node",
+		"onCommand:extension.pickNodeProcess",
+		"onCommand:extension.node-debug.toggleSkippingFile",
+		"onCommand:extension.node-debug.attachNodeProcess",
+		"onCommand:extension.node-debug.startAutoAttach"
+	],
+	"resolutions": {
+		"gulp/**/yargs-parser": "5.0.0-security.0"
+	},
 	"dependencies": {
 		"glob": "11.0.1",
 		"minimatch": "10.0.1",
 		"request-light": "0.8.0",
 		"source-map": "0.7.4"
 	},
-	"description": "%extension.description%",
 	"devDependencies": {
-		"@types/node": "22.13.9",
+		"@types/node": "22.13.10",
 		"del": "8.0.0",
 		"ts-loader": "9.5.2",
 		"tsutils": "3.21.0",
 		"yargs-parser": "21.1.1"
 	},
-	"displayName": "[Deprecated] Node Debug (legacy)",
 	"extensionDependencies": [
 		"ms-vscode.node-debug2"
 	],
 	"icon": "images/node-debug-icon.png",
-	"main": "./dist/extension.js",
-	"name": "node-debug",
-	"resolutions": {
-		"gulp/**/yargs-parser": "5.0.0-security.0"
-	},
-	"scripts": {
-		"build": "gulp build",
-		"publish": "gulp prepare-for-webpack && webpack --mode production --vscode-nls && vsce publish",
-		"translations-export": "gulp translations-export"
+	"capabilities": {
+		"untrustedWorkspaces": {
+			"supported": true
+		},
+		"virtualWorkspaces": false
 	}
 }

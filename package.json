@@ -432,7 +432,7 @@
 		"source-map": "0.7.4"
 	},
 	"devDependencies": {
-		"@types/node": "22.13.10",
+		"@types/node": "22.13.14",
 		"del": "8.0.0",
 		"ts-loader": "9.5.2",
 		"tsutils": "3.21.0",

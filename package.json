@@ -1,10 +1,33 @@
 {
 	"name": "node-debug",
 	"displayName": "[Deprecated] Node Debug (legacy)",
+	"version": "0.0.1",
+	"private": false,
 	"description": "%extension.description%",
+	"keywords": [
+		"codeeditorland",
+		"land",
+		"playform"
+	],
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandNodeDebug#readme",
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandNodeDebug/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/LandNodeDebug.git"
+	},
+	"license": "SEE LICENSE IN LICENSE",
+	"author": {
+		"name": "Source 🖋️ Open 👐🏻",
+		"email": "Source/Open@Editor.Land",
+		"url": "HTTPS://Editor.Land"
+	},
+	"type": "module",
 	"main": "./dist/extension.js",
 	"scripts": {
 		"build": "gulp build",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
 		"publish": "gulp prepare-for-webpack && webpack --mode production --vscode-nls && vsce publish",
 		"translations-export": "gulp translations-export"
 	},
@@ -432,6 +455,7 @@
 		"source-map": "0.7.4"
 	},
 	"devDependencies": {
+		"@playform/build": "0.2.1",
 		"@types/node": "22.13.14",
 		"del": "8.0.0",
 		"ts-loader": "9.5.2",
@@ -441,6 +465,9 @@
 	"extensionDependencies": [
 		"ms-vscode.node-debug2"
 	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"icon": "images/node-debug-icon.png",
 	"capabilities": {
 		"untrustedWorkspaces": {

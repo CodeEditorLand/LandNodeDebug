@@ -1,19 +1,27 @@
 {
 	"compileOnSave": false,
 	"compilerOptions": {
+		"baseUrl": "./",
 		"module": "commonjs",
-		"target": "es6",
-
-		"noImplicitAny": false,
-		"removeComments": false,
-		"noUnusedLocals": true,
-		"noImplicitThis": true,
 		"noFallthroughCasesInSwitch": false,
+		"noImplicitAny": false,
 		"noImplicitReturns": true,
-
+		"noImplicitThis": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": false,
+		"outDir": "Target",
 		"preserveConstEnums": true,
+		"removeComments": false,
+		"rootDir": "src",
 		"strictNullChecks": true,
-		"noUnusedParameters": false
+		"target": "es6"
 	},
-	"exclude": ["node_modules", "testdata/"]
+	"exclude": [
+		"node_modules",
+		"testdata/"
+	],
+	"extends": "@playform/build/tsconfig",
+	"include": [
+		"src"
+	]
 }

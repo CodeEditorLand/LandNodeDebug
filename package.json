@@ -449,7 +449,7 @@
 		"gulp/**/yargs-parser": "5.0.0-security.0"
 	},
 	"dependencies": {
-		"glob": "11.0.1",
+		"glob": "11.0.2",
 		"minimatch": "10.0.1",
 		"request-light": "0.8.0",
 		"source-map": "0.7.4"

@@ -456,7 +456,7 @@
 	},
 	"devDependencies": {
 		"@playform/build": "0.2.3",
-		"@types/node": "22.14.1",
+		"@types/node": "22.15.2",
 		"del": "8.0.0",
 		"ts-loader": "9.5.2",
 		"tsutils": "3.21.0",

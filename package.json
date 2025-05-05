@@ -1,37 +1,133 @@
 {
 	"name": "node-debug",
 	"displayName": "[Deprecated] Node Debug (legacy)",
-	"version": "0.0.1",
-	"private": false,
+	"version": "1.45.0",
+	"publisher": "ms-vscode",
 	"description": "%extension.description%",
-	"keywords": [
-		"codeeditorland",
-		"land",
-		"playform"
+	"icon": "images/node-debug-icon.png",
+	"categories": [
+		"Debuggers"
 	],
-	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/LandNodeDebug#readme",
-	"bugs": {
-		"url": "HTTPS://GitHub.Com/CodeEditorLand/LandNodeDebug/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+HTTPS://github.com/CodeEditorLand/LandNodeDebug.git"
-	},
-	"license": "SEE LICENSE IN LICENSE",
 	"author": {
-		"name": "Source 🖋️ Open 👐🏻",
-		"email": "Source/Open@Editor.Land",
-		"url": "HTTPS://Editor.Land"
+		"name": "Microsoft Corporation"
 	},
-	"type": "module",
-	"main": "./dist/extension.js",
+	"license": "MIT",
+	"private": true,
 	"scripts": {
 		"build": "gulp build",
-		"prepublishOnly": "Build 'Source/**/*.ts'",
+		"watch": "gulp watch",
+		"test": "gulp compile && mocha --timeout 10000 -u tdd ./out/tests/",
+		"nodemon": "nodemon --debug --nolazy ./dist/nodeDebug.js --server=4711",
+		"prepublish": "gulp build",
+		"vscode:prepublish": "gulp prepare-for-webpack && webpack --mode production --vscode-nls",
+		"package": "gulp prepare-for-webpack && webpack --mode production --vscode-nls && vsce package --yarn",
 		"publish": "gulp prepare-for-webpack && webpack --mode production --vscode-nls && vsce publish",
+		"bump": "npm version patch -m 'bump to %s'",
+		"tslint": "gulp tslint",
 		"translations-export": "gulp translations-export"
 	},
+	"keywords": [
+		"multi-root ready"
+	],
+	"engines": {
+		"vscode": "^1.60.0-insider",
+		"node": ">=10"
+	},
+	"extensionDependencies": [
+		"ms-vscode.node-debug2"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Microsoft/vscode-node-debug.git"
+	},
+	"bugs": {
+		"url": "https://github.com/Microsoft/vscode-node-debug/issues"
+	},
+	"dependencies": {
+		"glob": "7.1.6",
+		"minimatch": "3.0.4",
+		"request-light": "0.4.0",
+		"source-map": "0.6.1",
+		"vscode-debugadapter": "1.48.0",
+		"vscode-nls": "5.0.0"
+	},
+	"devDependencies": {
+		"@types/mocha": "8.2.0",
+		"@types/node": "^12.7.3",
+		"@types/vscode": "^1.42.0",
+		"copy-webpack-plugin": "^6.4.1",
+		"del": "5.1.0",
+		"gulp": "4.0.2",
+		"gulp-filter": "6.0.0",
+		"gulp-sourcemaps": "2.6.5",
+		"gulp-tsb": "4.0.5",
+		"gulp-tslint": "8.1.4",
+		"gulp-typescript": "5.0.1",
+		"gulp-uglify": "3.0.2",
+		"mocha": "8.2.1",
+		"ts-loader": "~6.2.1",
+		"tslint": "6.0.0",
+		"tslint-microsoft-contrib": "6.2.0",
+		"tsutils": "3.17.1",
+		"typescript": "~3.7.2",
+		"vsce": "^1.88.0",
+		"vscode-debugadapter-testsupport": "1.48.0",
+		"vscode-debugprotocol": "1.48.0",
+		"vscode-nls-dev": "3.3.1",
+		"webpack": "^4.44.1",
+		"webpack-cli": "~3.3.12",
+		"yargs-parser": "5.0.0-security.0"
+	},
+	"resolutions": {
+		"gulp/**/yargs-parser": "^5.0.0-security.0"
+	},
+	"main": "./dist/extension.js",
+	"activationEvents": [
+		"onDebugResolve:legacy-node",
+		"onCommand:extension.pickNodeProcess",
+		"onCommand:extension.node-debug.toggleSkippingFile",
+		"onCommand:extension.node-debug.attachNodeProcess",
+		"onCommand:extension.node-debug.startAutoAttach"
+	],
+	"capabilities": {
+		"virtualWorkspaces": false,
+		"untrustedWorkspaces": {
+			"supported": true
+		}
+	},
 	"contributes": {
+		"configuration": {
+			"title": "Node debug",
+			"properties": {
+				"debug.node.showUseWslIsDeprecatedWarning": {
+					"scope": "window",
+					"type": "boolean",
+					"description": "%debug.node.showUseWslIsDeprecatedWarning.description%",
+					"default": true
+				}
+			}
+		},
+		"menus": {
+			"debug/callstack/context": [
+				{
+					"command": "extension.node-debug.toggleSkippingFile",
+					"group": "navigation",
+					"when": "inDebugMode && debugType == 'legacy-node' && callStackItemType == 'stackFrame'"
+				}
+			]
+		},
+		"commands": [
+			{
+				"command": "extension.node-debug.attachNodeProcess",
+				"title": "%attach.node.process%",
+				"category": "Debug"
+			},
+			{
+				"command": "extension.node-debug.toggleSkippingFile",
+				"title": "%toggle.skipping.this.file%",
+				"category": "Debug"
+			}
+		],
 		"breakpoints": [
 			{
 				"language": "javascript"
@@ -40,87 +136,27 @@
 				"language": "javascriptreact"
 			}
 		],
-		"commands": [
-			{
-				"category": "Debug",
-				"command": "extension.node-debug.attachNodeProcess",
-				"title": "%attach.node.process%"
-			},
-			{
-				"category": "Debug",
-				"command": "extension.node-debug.toggleSkippingFile",
-				"title": "%toggle.skipping.this.file%"
-			}
-		],
-		"configuration": {
-			"properties": {
-				"debug.node.showUseWslIsDeprecatedWarning": {
-					"default": true,
-					"description": "%debug.node.showUseWslIsDeprecatedWarning.description%",
-					"scope": "window",
-					"type": "boolean"
-				}
-			},
-			"title": "Node debug"
-		},
 		"debuggers": [
 			{
+				"type": "legacy-node",
+				"label": "%node.label%",
+				"program": "./dist/nodeDebug.js",
+				"runtime": "node",
+				"variables": {
+					"PickProcess": "extension.pickNodeProcess"
+				},
 				"aiKey": "AIF-d9b70cd4-b9f9-4d70-929b-a071c400b217",
+				"languages": [
+					"javascript",
+					"typescript",
+					"javascriptreact",
+					"typescriptreact"
+				],
 				"configurationAttributes": {
-					"attach": {
+					"launch": {
 						"properties": {
-							"address": {
-								"default": "localhost",
-								"description": "%node.address.description%",
-								"type": "string"
-							},
-							"cwd": {
-								"default": "${workspaceFolder}",
-								"description": "%node.launch.cwd.description%",
-								"type": "string"
-							},
-							"disableOptimisticBPs": {
-								"default": true,
-								"description": "%node.disableOptimisticBPs.description%",
-								"type": "boolean"
-							},
-							"localRoot": {
-								"default": null,
-								"description": "%node.localRoot.description%",
-								"type": [
-									"string",
-									"null"
-								]
-							},
-							"outDir": {
-								"default": null,
-								"deprecationMessage": "%outDir.deprecationMessage%",
-								"type": [
-									"string",
-									"null"
-								]
-							},
-							"outFiles": {
-								"default": [],
-								"items": {
-									"type": "string"
-								},
-								"markdownDescription": "%outFiles.description%",
-								"type": "array"
-							},
-							"port": {
-								"default": 9229,
-								"description": "%node.port.description%",
-								"type": "number"
-							},
-							"processId": {
-								"default": "${command:PickProcess}",
-								"description": "%node.attach.processId.description%",
-								"type": "string"
-							},
 							"protocol": {
-								"default": "inspector",
-								"description": "%node.protocol.description%",
+								"type": "string",
 								"enum": [
 									"auto",
 									"inspector",
@@ -131,96 +167,25 @@
 									"%node.protocol.inspector.description%",
 									"%node.protocol.legacy.description%"
 								],
-								"type": "string"
+								"description": "%node.protocol.description%",
+								"default": "inspector"
 							},
-							"remoteRoot": {
-								"default": null,
-								"description": "%node.remoteRoot.description%",
-								"type": [
-									"string",
-									"null"
-								]
-							},
-							"restart": {
-								"default": true,
-								"description": "%node.restart.description%",
-								"type": "boolean"
-							},
-							"showAsyncStacks": {
-								"default": true,
-								"description": "%node.showAsyncStacks.description%",
-								"type": "boolean"
-							},
-							"skipFiles": {
-								"default": [],
-								"items": {
-									"type": "string"
-								},
-								"markdownDescription": "%skipFiles.description%",
-								"type": "array"
-							},
-							"smartStep": {
-								"default": true,
-								"description": "%smartStep.description%",
-								"type": "boolean"
-							},
-							"sourceMapPathOverrides": {
-								"default": {
-									"webpack:///*": "*",
-									"webpack:///./*": "${workspaceRoot}/*",
-									"webpack:///./~/*": "${workspaceRoot}/node_modules/*"
-								},
-								"description": "%node.sourceMapPathOverrides.description%",
-								"type": "object"
-							},
-							"sourceMaps": {
-								"default": true,
-								"description": "%node.sourceMaps.description%",
-								"type": "boolean"
+							"program": {
+								"type": "string",
+								"description": "%node.launch.program.description%"
 							},
 							"stopOnEntry": {
-								"default": true,
+								"type": "boolean",
 								"description": "%node.stopOnEntry.description%",
-								"type": "boolean"
+								"default": true
 							},
-							"timeout": {
-								"default": 10000,
-								"description": "%node.timeout.description%",
-								"type": "number"
-							},
-							"trace": {
-								"default": true,
-								"description": "%trace.description%",
-								"type": [
-									"boolean",
-									"string"
-								]
-							}
-						}
-					},
-					"launch": {
-						"properties": {
-							"address": {
-								"default": "localhost",
-								"description": "%node.address.description%",
-								"type": "string"
-							},
-							"args": {
-								"default": [],
-								"description": "%launch.args.description%",
-								"items": {
-									"type": "string"
-								},
-								"type": "array"
-							},
-							"autoAttachChildProcesses": {
-								"default": true,
-								"description": "%node.launch.autoAttachChildProcesses.description%",
-								"type": "boolean"
+							"externalConsole": {
+								"type": "boolean",
+								"deprecationMessage": "%node.launch.externalConsole.deprecationMessage%",
+								"default": true
 							},
 							"console": {
-								"default": "internalConsole",
-								"description": "%node.launch.console.description%",
+								"type": "string",
 								"enum": [
 									"internalConsole",
 									"integratedTerminal",
@@ -231,83 +196,181 @@
 									"%node.launch.console.integratedTerminal.description%",
 									"%node.launch.console.externalTerminal.description%"
 								],
-								"type": "string"
+								"description": "%node.launch.console.description%",
+								"default": "internalConsole"
+							},
+							"args": {
+								"type": "array",
+								"description": "%launch.args.description%",
+								"items": {
+									"type": "string"
+								},
+								"default": []
 							},
 							"cwd": {
-								"default": "${workspaceFolder}",
+								"type": "string",
 								"description": "%node.launch.cwd.description%",
-								"type": "string"
+								"default": "${workspaceFolder}"
 							},
-							"disableOptimisticBPs": {
-								"default": true,
-								"description": "%node.disableOptimisticBPs.description%",
-								"type": "boolean"
+							"runtimeExecutable": {
+								"type": [
+									"string",
+									"null"
+								],
+								"markdownDescription": "%node.launch.runtimeExecutable.description%",
+								"default": "node"
+							},
+							"runtimeVersion": {
+								"type": "string",
+								"markdownDescription": "%node.launch.runtimeVersion.description%",
+								"default": "default"
+							},
+							"runtimeArgs": {
+								"type": "array",
+								"description": "%node.launch.runtimeArgs.description%",
+								"items": {
+									"type": "string"
+								},
+								"default": []
 							},
 							"env": {
+								"type": "object",
 								"additionalProperties": {
 									"type": [
 										"string",
 										"null"
 									]
 								},
-								"default": {},
 								"markdownDescription": "%node.launch.env.description%",
-								"type": "object"
+								"default": {}
 							},
 							"envFile": {
-								"default": "${workspaceFolder}/.env",
+								"type": "string",
 								"description": "%node.launch.envFile.description%",
-								"type": "string"
+								"default": "${workspaceFolder}/.env"
 							},
-							"externalConsole": {
-								"default": true,
-								"deprecationMessage": "%node.launch.externalConsole.deprecationMessage%",
-								"type": "boolean"
-							},
-							"localRoot": {
-								"default": null,
-								"description": "%node.localRoot.description%",
-								"type": [
-									"string",
-									"null"
-								]
+							"sourceMaps": {
+								"type": "boolean",
+								"description": "%node.sourceMaps.description%",
+								"default": true
 							},
 							"outDir": {
-								"default": null,
-								"deprecationMessage": "%outDir.deprecationMessage%",
 								"type": [
 									"string",
 									"null"
-								]
+								],
+								"deprecationMessage": "%outDir.deprecationMessage%",
+								"default": null
 							},
 							"outFiles": {
-								"default": [],
+								"type": "array",
+								"markdownDescription": "%outFiles.description%",
 								"items": {
 									"type": "string"
 								},
-								"markdownDescription": "%outFiles.description%",
-								"type": "array"
+								"default": []
+							},
+							"port": {
+								"type": "number",
+								"description": "%node.port.description%",
+								"default": 9229
+							},
+							"address": {
+								"type": "string",
+								"description": "%node.address.description%",
+								"default": "localhost"
+							},
+							"timeout": {
+								"type": "number",
+								"description": "%node.timeout.description%",
+								"default": 10000
+							},
+							"restart": {
+								"type": "boolean",
+								"description": "%node.restart.description%",
+								"default": true
+							},
+							"localRoot": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "%node.localRoot.description%",
+								"default": null
+							},
+							"remoteRoot": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "%node.remoteRoot.description%",
+								"default": null
+							},
+							"smartStep": {
+								"type": "boolean",
+								"description": "%smartStep.description%",
+								"default": true
+							},
+							"skipFiles": {
+								"type": "array",
+								"markdownDescription": "%skipFiles.description%",
+								"items": {
+									"type": "string"
+								},
+								"default": []
+							},
+							"showAsyncStacks": {
+								"type": "boolean",
+								"description": "%node.showAsyncStacks.description%",
+								"default": true
+							},
+							"useWSL": {
+								"type": "boolean",
+								"description": "%node.launch.useWSL.description%",
+								"default": true,
+								"deprecationMessage": "%node.launch.useWSL.deprecation%"
+							},
+							"trace": {
+								"type": [
+									"boolean",
+									"string"
+								],
+								"description": "%trace.description%",
+								"default": true
 							},
 							"outputCapture": {
-								"default": "console",
-								"description": "%node.launch.outputCapture.description%",
 								"enum": [
 									"console",
 									"std"
-								]
+								],
+								"description": "%node.launch.outputCapture.description%",
+								"default": "console"
 							},
-							"port": {
-								"default": 9229,
-								"description": "%node.port.description%",
-								"type": "number"
+							"sourceMapPathOverrides": {
+								"type": "object",
+								"description": "%node.sourceMapPathOverrides.description%",
+								"default": {
+									"webpack:///./~/*": "${workspaceRoot}/node_modules/*",
+									"webpack:///./*": "${workspaceRoot}/*",
+									"webpack:///*": "*"
+								}
 							},
-							"program": {
-								"description": "%node.launch.program.description%",
-								"type": "string"
+							"autoAttachChildProcesses": {
+								"type": "boolean",
+								"description": "%node.launch.autoAttachChildProcesses.description%",
+								"default": true
 							},
+							"disableOptimisticBPs": {
+								"type": "boolean",
+								"description": "%node.disableOptimisticBPs.description%",
+								"default": true
+							}
+						}
+					},
+					"attach": {
+						"properties": {
 							"protocol": {
-								"default": "inspector",
-								"description": "%node.protocol.description%",
+								"type": "string",
 								"enum": [
 									"auto",
 									"inspector",
@@ -318,161 +381,125 @@
 									"%node.protocol.inspector.description%",
 									"%node.protocol.legacy.description%"
 								],
-								"type": "string"
+								"description": "%node.protocol.description%",
+								"default": "inspector"
 							},
-							"remoteRoot": {
-								"default": null,
-								"description": "%node.remoteRoot.description%",
-								"type": [
-									"string",
-									"null"
-								]
+							"cwd": {
+								"type": "string",
+								"description": "%node.launch.cwd.description%",
+								"default": "${workspaceFolder}"
 							},
-							"restart": {
-								"default": true,
-								"description": "%node.restart.description%",
-								"type": "boolean"
+							"processId": {
+								"type": "string",
+								"description": "%node.attach.processId.description%",
+								"default": "${command:PickProcess}"
 							},
-							"runtimeArgs": {
-								"default": [],
-								"description": "%node.launch.runtimeArgs.description%",
-								"items": {
-									"type": "string"
-								},
-								"type": "array"
+							"port": {
+								"type": "number",
+								"description": "%node.port.description%",
+								"default": 9229
 							},
-							"runtimeExecutable": {
-								"default": "node",
-								"markdownDescription": "%node.launch.runtimeExecutable.description%",
-								"type": [
-									"string",
-									"null"
-								]
-							},
-							"runtimeVersion": {
-								"default": "default",
-								"markdownDescription": "%node.launch.runtimeVersion.description%",
-								"type": "string"
-							},
-							"showAsyncStacks": {
-								"default": true,
-								"description": "%node.showAsyncStacks.description%",
-								"type": "boolean"
-							},
-							"skipFiles": {
-								"default": [],
-								"items": {
-									"type": "string"
-								},
-								"markdownDescription": "%skipFiles.description%",
-								"type": "array"
-							},
-							"smartStep": {
-								"default": true,
-								"description": "%smartStep.description%",
-								"type": "boolean"
-							},
-							"sourceMapPathOverrides": {
-								"default": {
-									"webpack:///*": "*",
-									"webpack:///./*": "${workspaceRoot}/*",
-									"webpack:///./~/*": "${workspaceRoot}/node_modules/*"
-								},
-								"description": "%node.sourceMapPathOverrides.description%",
-								"type": "object"
-							},
-							"sourceMaps": {
-								"default": true,
-								"description": "%node.sourceMaps.description%",
-								"type": "boolean"
-							},
-							"stopOnEntry": {
-								"default": true,
-								"description": "%node.stopOnEntry.description%",
-								"type": "boolean"
+							"address": {
+								"type": "string",
+								"description": "%node.address.description%",
+								"default": "localhost"
 							},
 							"timeout": {
-								"default": 10000,
+								"type": "number",
 								"description": "%node.timeout.description%",
-								"type": "number"
+								"default": 10000
+							},
+							"restart": {
+								"type": "boolean",
+								"description": "%node.restart.description%",
+								"default": true
+							},
+							"sourceMaps": {
+								"type": "boolean",
+								"description": "%node.sourceMaps.description%",
+								"default": true
+							},
+							"outDir": {
+								"type": [
+									"string",
+									"null"
+								],
+								"deprecationMessage": "%outDir.deprecationMessage%",
+								"default": null
+							},
+							"outFiles": {
+								"type": "array",
+								"markdownDescription": "%outFiles.description%",
+								"items": {
+									"type": "string"
+								},
+								"default": []
+							},
+							"stopOnEntry": {
+								"type": "boolean",
+								"description": "%node.stopOnEntry.description%",
+								"default": true
+							},
+							"localRoot": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "%node.localRoot.description%",
+								"default": null
+							},
+							"remoteRoot": {
+								"type": [
+									"string",
+									"null"
+								],
+								"description": "%node.remoteRoot.description%",
+								"default": null
+							},
+							"smartStep": {
+								"type": "boolean",
+								"description": "%smartStep.description%",
+								"default": true
+							},
+							"skipFiles": {
+								"type": "array",
+								"markdownDescription": "%skipFiles.description%",
+								"items": {
+									"type": "string"
+								},
+								"default": []
+							},
+							"showAsyncStacks": {
+								"type": "boolean",
+								"description": "%node.showAsyncStacks.description%",
+								"default": true
 							},
 							"trace": {
-								"default": true,
-								"description": "%trace.description%",
 								"type": [
 									"boolean",
 									"string"
-								]
+								],
+								"description": "%trace.description%",
+								"default": true
 							},
-							"useWSL": {
-								"default": true,
-								"deprecationMessage": "%node.launch.useWSL.deprecation%",
-								"description": "%node.launch.useWSL.description%",
-								"type": "boolean"
+							"sourceMapPathOverrides": {
+								"type": "object",
+								"description": "%node.sourceMapPathOverrides.description%",
+								"default": {
+									"webpack:///./~/*": "${workspaceRoot}/node_modules/*",
+									"webpack:///./*": "${workspaceRoot}/*",
+									"webpack:///*": "*"
+								}
+							},
+							"disableOptimisticBPs": {
+								"type": "boolean",
+								"description": "%node.disableOptimisticBPs.description%",
+								"default": true
 							}
 						}
 					}
-				},
-				"label": "%node.label%",
-				"languages": [
-					"javascript",
-					"typescript",
-					"javascriptreact",
-					"typescriptreact"
-				],
-				"program": "./dist/nodeDebug.js",
-				"runtime": "node",
-				"type": "legacy-node",
-				"variables": {
-					"PickProcess": "extension.pickNodeProcess"
 				}
 			}
-		],
-		"menus": {
-			"debug/callstack/context": [
-				{
-					"command": "extension.node-debug.toggleSkippingFile",
-					"group": "navigation",
-					"when": "inDebugMode && debugType == 'legacy-node' && callStackItemType == 'stackFrame'"
-				}
-			]
-		}
-	},
-	"activationEvents": [
-		"onDebugResolve:legacy-node",
-		"onCommand:extension.pickNodeProcess",
-		"onCommand:extension.node-debug.toggleSkippingFile",
-		"onCommand:extension.node-debug.attachNodeProcess",
-		"onCommand:extension.node-debug.startAutoAttach"
-	],
-	"resolutions": {
-		"gulp/**/yargs-parser": "5.0.0-security.0"
-	},
-	"dependencies": {
-		"glob": "11.0.2",
-		"minimatch": "10.0.1",
-		"request-light": "0.8.0",
-		"source-map": "0.7.4"
-	},
-	"devDependencies": {
-		"@playform/build": "0.2.3",
-		"@types/node": "22.15.3",
-		"del": "8.0.0",
-		"ts-loader": "9.5.2",
-		"tsutils": "3.21.0",
-		"yargs-parser": "21.1.1"
-	},
-	"extensionDependencies": [
-		"ms-vscode.node-debug2"
-	],
-	"publishConfig": {
-		"access": "public"
-	},
-	"icon": "images/node-debug-icon.png",
-	"capabilities": {
-		"untrustedWorkspaces": {
-			"supported": true
-		},
-		"virtualWorkspaces": false
+		]
 	}
 }

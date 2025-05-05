@@ -4,7 +4,7 @@ console.log("line 3");
 
 try {
 	throw new Error("error");
-} catch (e) {
+} catch(e) {
 	console.log("exception: " + e);
 }
 

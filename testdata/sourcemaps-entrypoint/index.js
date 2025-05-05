@@ -3,6 +3,6 @@ hello();
 hello();
 hello();
 function hello() {
-	return "hello";
+    return 'hello';
 }
 //# sourceMappingURL=index.js.map

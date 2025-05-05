@@ -9,8 +9,8 @@ a.push("line 6");
 var x = 0;
 
 for (var i = 0; i < a.length; i++) {
-	x = i * i;
+	x = i*i;
 	console.log(x);
 }
 
-process.exit(); // ensure that program terminates
+process.exit();		// ensure that program terminates

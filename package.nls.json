@@ -19,9 +19,9 @@
 	"debug.node.showUseWslIsDeprecatedWarning.description": "Controls whether to show a warning when the 'useWSL' attribute is used.",
 
 	"node.protocol.description": "Node.js debug protocol to use.",
-	"node.protocol.auto.description": "Try to detect the best protocol automatically, selecting 'inspector' for launching Node 8.0+",
-	"node.protocol.inspector.description": "New protocol supported by Node.js versions >= 6.3",
-	"node.protocol.legacy.description": "Old protocol supported by Node.js versions < 8.0",
+		"node.protocol.auto.description": "Try to detect the best protocol automatically, selecting 'inspector' for launching Node 8.0+",
+		"node.protocol.inspector.description": "New protocol supported by Node.js versions >= 6.3",
+		"node.protocol.legacy.description": "Old protocol supported by Node.js versions < 8.0",
 
 	"node.sourceMaps.description": "Use JavaScript source maps (if they exist).",
 	"node.stopOnEntry.description": "Automatically stop program after launch.",
@@ -38,9 +38,9 @@
 	"node.launch.program.description": "Absolute path to the program. Generated value is guessed by looking at package.json and opened files. Edit this attribute.",
 	"node.launch.externalConsole.deprecationMessage": "Attribute 'externalConsole' is deprecated, use 'console' instead.",
 	"node.launch.console.description": "Where to launch the debug target.",
-	"node.launch.console.internalConsole.description": "VS Code Debug Console (which doesn't support to read input from a program)",
-	"node.launch.console.integratedTerminal.description": "VS Code's integrated terminal",
-	"node.launch.console.externalTerminal.description": "External terminal that can be configured via user settings",
+		"node.launch.console.internalConsole.description": "VS Code Debug Console (which doesn't support to read input from a program)",
+		"node.launch.console.integratedTerminal.description": "VS Code's integrated terminal",
+		"node.launch.console.externalTerminal.description": "External terminal that can be configured via user settings",
 
 	"node.launch.cwd.description": "Absolute path to the working directory of the program being debugged.",
 	"node.launch.runtimeExecutable.description": "Runtime to use. Either an absolute path or the name of a runtime available on the PATH. If omitted `node` is assumed.",

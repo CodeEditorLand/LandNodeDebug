@@ -1,0 +1,65 @@
+{
+	"version": "0.1.0",
+	"configurations": [
+		{
+			"type": "extensionHost",
+			"request": "launch",
+			"name": "Extension",
+			"runtimeExecutable": "${execPath}",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}"
+			],
+			"outFiles": [ "${workspaceFolder}/out/**/*.js" ]
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Server",
+			"program": "${workspaceFolder}/src/node/nodeDebug.ts",
+			"args": [ "--server=4711" ],
+			"outFiles": [ "${workspaceFolder}/out/**/*.js" ],
+			"internalConsoleOptions": "openOnSessionStart"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Server (nodemon)",
+			"runtimeExecutable": "npm",
+			"runtimeArgs": [
+				"run-script", "nodemon"
+			],
+			"restart": true,
+			"port": 5858,
+			"outFiles": [ "${workspaceFolder}/out/**/*.js" ],
+			"console": "integratedTerminal"
+		},
+		{
+			"type": "node",
+			"request": "launch",
+			"name": "Tests",
+			"program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+			"args": [
+				"-u", "tdd",
+				"--timeout", "999999",
+				"--colors",
+				"./out/tests"
+			],
+			"env": {
+				"LEGACY_NODE_PATH": "${env:NVM_DIR}/versions/node/v7.9.0/bin:${env:PATH}"
+			},
+			"windows": {
+				"env": {
+					"LEGACY_NODE_PATH": "${env:NVM_HOME}\\v7.9.0;${env:Path}"
+				}
+			},
+			"outFiles": [ "${workspaceFolder}/out/**/*.js" ],
+			"internalConsoleOptions": "openOnSessionStart"
+		}
+	],
+	"compounds": [
+		{
+			"name": "Extension + Server",
+			"configurations": [ "Extension", "Server" ]
+		}
+	]
+}
